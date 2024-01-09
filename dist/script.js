@@ -24,23 +24,76 @@ async function getUsers(){
                 console.log("Error fetching data: ", error)
             })
 }
-async function userAvatar(){
-    return fetch("https://api.dicebear.com/6.x/adventurer/svg")
-                .then(res => {
-                    if(!res.ok){
-                        throw new Error("Error network res");
-                    }else {
-                        return res.json();
-                    }
-                })
-                .then(data => {
-                    return console.log(data)
-                })
-                .catch(error => {
-                    console.log("Error fetching Api: ", error)
-                })
+async function userAvatar(name = "john"){
+
+    const response = await fetch(`https://api.dicebear.com/7.x/pixel-art/svg?seed=${name}`)
+        
+    if(!response.ok){
+        throw new Error("Error network response");
+    }
+    const svgData = await response.text();
+    return svgData; 
+
+
 }
-userAvatar();
+
+
+
+async function fetchUserAvatars(username){
+    const userAvatarPromises = username.map(async (name) => {
+        try {
+            const svgData = await userAvatar(name);
+            return {user: name, value: svgData};
+        }catch (error){
+            console.log(`Error fetching avatar for ${name}: `, error);
+            return {user: name, value: null};
+        }
+    });
+
+    return Promise.all(userAvatarPromises);
+}
+
+fetchUserAvatars("jhon")
+    .then((userAvatarData) => {
+
+    })
+
+//     return fetch(`https://api.dicebear.com/7.x/pixel-art/svg?seed=${name}`)
+//                 .then(res => {
+//                     if(!res.ok){
+//                         throw new Error("Error network res");
+//                     }else {
+//                         const svgData = await res.text();
+//                         return res.text();
+//                     }
+//                 })
+//                 .then(svgData => {
+//                     return svgData;
+//                 })
+//                 .catch(error => {
+//                     console.log("Error fetching Api: ", error)
+//                 })
+// }
+// const usersAvatar = await userAvatar().then(svgData => {
+//     for (const users in svgData){
+//         for(let i = 0; i < svgData.length; i++){
+//             const value = svgData[users];
+//             console.log(value.length)
+//             console.log(svgData.length)
+//         }
+//         if(svgData.hasOwnProperty(users)){
+//             const value = svgData[users];
+//             const user = users;
+//             console.log(`${user}: ${svgData}`)
+//             return console.log({
+//                 users, 
+//                 value
+//             });
+//         }
+//     }
+// });
+
+
 function searchForUser(e){
     e.preventDefault();
     const userInput = userInputSearch.value;
@@ -83,6 +136,8 @@ function noUser(){
 function displayUsers(filteredUsers){
         const gridContainer = document.getElementById('gridContainer');
         gridContainer.innerHTML = '';
+
+        
 
     for (let i = 0; i < filteredUsers.length; i++){
         const gridItem = document.createElement('div');
@@ -138,6 +193,6 @@ function displayUsers(filteredUsers){
 
 
 
-
+const navMenu = document.querySelector('.nav-menu')
 const userInputSearch = document.getElementById("user-search");
-userInputSearch.addEventListener('input', searchForUser)
+userInputSearch.addEventListener('input', searchForUser);
