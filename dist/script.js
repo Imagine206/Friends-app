@@ -1,101 +1,20 @@
-async function getUsers(){
-   return fetch("users.json")
-            .then(response => {
-                if(!response.ok){
-                    throw new Error("Network response was not ok");
-                }
-                return response.json();
-            })
-            .then(data => {
-                return data.map(users => {
-                    return {
-                        first_name:users.first_name,
-                        last_name: users.last_name,
-                        user_id: users.user_id,
-                        age: users.age,
-                        email: users.email,
-                        country: users.country,
-                        registration_date: users.registration_date,
-                        job: users.job
-                    }
-                })
-            })
-            .catch(error => {
-                console.log("Error fetching data: ", error)
-            })
+import {getUsers} from './api.js';
+
+function noUser(){
+    const gridContainer = document.getElementById('gridContainer');
+    gridContainer.innerHTML = '';
+    const div = document.createElement('div');
+    div.innerHTML = "No User Found :(";
+    div.classList.add('noUserFound');
+
+    gridContainer.append(div)
 }
-async function userAvatar(name = "john"){
-
-    const response = await fetch(`https://api.dicebear.com/7.x/pixel-art/svg?seed=${name}`)
-        
-    if(!response.ok){
-        throw new Error("Error network response");
-    }
-    const svgData = await response.text();
-    return svgData; 
-
-
-}
-
-
-
-async function fetchUserAvatars(username){
-    const userAvatarPromises = username.map(async (name) => {
-        try {
-            const svgData = await userAvatar(name);
-            return {user: name, value: svgData};
-        }catch (error){
-            console.log(`Error fetching avatar for ${name}: `, error);
-            return {user: name, value: null};
-        }
-    });
-
-    return Promise.all(userAvatarPromises);
-}
-
-fetchUserAvatars("jhon")
-    .then((userAvatarData) => {
-
-    })
-
-//     return fetch(`https://api.dicebear.com/7.x/pixel-art/svg?seed=${name}`)
-//                 .then(res => {
-//                     if(!res.ok){
-//                         throw new Error("Error network res");
-//                     }else {
-//                         const svgData = await res.text();
-//                         return res.text();
-//                     }
-//                 })
-//                 .then(svgData => {
-//                     return svgData;
-//                 })
-//                 .catch(error => {
-//                     console.log("Error fetching Api: ", error)
-//                 })
-// }
-// const usersAvatar = await userAvatar().then(svgData => {
-//     for (const users in svgData){
-//         for(let i = 0; i < svgData.length; i++){
-//             const value = svgData[users];
-//             console.log(value.length)
-//             console.log(svgData.length)
-//         }
-//         if(svgData.hasOwnProperty(users)){
-//             const value = svgData[users];
-//             const user = users;
-//             console.log(`${user}: ${svgData}`)
-//             return console.log({
-//                 users, 
-//                 value
-//             });
-//         }
-//     }
-// });
-
 
 function searchForUser(e){
     e.preventDefault();
+
+    
+    const userInputSearch = document.getElementById("user-search");
     const userInput = userInputSearch.value;
     console.log(userInput)
     //Get users from the user.json file
@@ -122,15 +41,6 @@ function searchForUser(e){
             })
     }
     
-}
-function noUser(){
-    const gridContainer = document.getElementById('gridContainer');
-    gridContainer.innerHTML = '';
-    const div = document.createElement('div');
-    div.innerHTML = "No User Found :("
-    div.classList.add('noUserFound')
-
-    gridContainer.append(div)
 }
 
 function displayUsers(filteredUsers){
@@ -168,11 +78,11 @@ function displayUsers(filteredUsers){
             </div>
             <div class="flex flex-col items-center pb-10">
                 <div id="profile-pic" class="w-24 h-24 mb-3 rounded-full shadow-lg"></div>
-                <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">${filteredUsers[i].first_name} ${filteredUsers[i].last_name}</h5>
+                <h5 class="mb-1 text-sm md:text-md lg:text-lg font-medium text-gray-900 dark:text-white">${filteredUsers[i].first_name} ${filteredUsers[i].last_name}</h5>
                 <span class="text-sm text-gray-500 dark:text-gray-400">${filteredUsers[i].job}</span>
                 <div class="flex mt-4 space-x-3 md:mt-6">
-                    <a href="#" class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add friend</a>
-                    <a href="#" class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-700 dark:focus:ring-gray-700">Message</a>
+                    <a href="#" class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 text-sm">Add friend</a>
+                    <a href="#" class="inline-flex text-[1px] lg:text-base items-center px-1 lg:px-4 py-1 lg:py-2 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-700 dark:focus:ring-gray-700">Message</a>
                 </div>
             </div>
         </div>
