@@ -52,6 +52,8 @@ function displayUsers(filteredUsers){
         const gridContainer = document.getElementById('gridContainer');
         gridContainer.innerHTML = '';
 
+        
+
     for (let i = 0; i < filteredUsers.length; i++){
         const gridItem = document.createElement('div');
 
@@ -122,6 +124,5 @@ function displayNav(){
 
 
 
-
-
+const navMenu = document.querySelector('.nav-menu');
 userInputSearch.addEventListener('input', searchForUser);
