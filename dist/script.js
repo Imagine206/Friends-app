@@ -1,4 +1,5 @@
 import {getUsers} from './api.js';
+import { displayDashboard} from './dashboard.js';
 
 
 const navOptions = document.querySelectorAll(".nav-options");
@@ -104,16 +105,31 @@ function displayUsers(filteredUsers){
 }
 
 navOptions.forEach(navEl => navEl.addEventListener("click", navChange));
-function navChange(e){
-    const currentEl = e.target
+export function navChange(e){
+    const currentEl = e.target.id;
     console.log(currentEl)
-    if(currentEl.hasAttribute("aria-current")){
-        currentEl.removeAttribute("aria-current");
-        
-    }else {
-        currentEl.setAttribute("aria-current", "page")
+    switch(currentEl){
+        case "dashboard-nav":
+            console.log("This is the dashboard in the switch case")
+            displayDashboard();
+            break;
+        case "friends-nav":
+            console.log("This is the friends in the switch case");
+            displayFriends();
+            break;
+        case "messages-nav":
+            console.log("This is the message in the switch case");
+            displayMessage();
+            break;
+        case "profile-nav":
+            console.log("This is the profile in the switch case")
+            displayProfile();
+            break;
     }
 }
+
+
+    
 const mainPage = document.getElementById('mainPage');
 mainPage.innerHTML = "Content page"
 function displayNav(){
